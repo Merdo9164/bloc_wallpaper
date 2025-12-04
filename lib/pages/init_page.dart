@@ -1,3 +1,4 @@
+import 'package:bloc_wallpaper/bloc/navigation_cubit.dart';
 import 'package:bloc_wallpaper/bloc/wallpaper_state.dart';
 import 'package:bloc_wallpaper/layout/main_layout.dart';
 import 'package:bloc_wallpaper/pages/splash_screen.dart';
@@ -23,14 +24,20 @@ class InitPage extends StatelessWidget {
           ),
         ),
       ],
-      child: BlocProvider(
-        create: (context) {
-          final repository = RepositoryProvider.of<WallpaperRepository>(
-            context,
-          );
-          return WallpaperBloc(repository: repository)
-            ..add(const LoadWallpapers());
-        },
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<WallpaperBloc>(
+            create: (context) {
+              final repository = RepositoryProvider.of<WallpaperRepository>(
+                context,
+              );
+              return WallpaperBloc(repository: repository)
+                ..add(const LoadWallpapers());
+            },
+          ),
+          //GEzinme Cubit i(Sayfa Değiştirme)
+          BlocProvider(create: (context) => NavigationCubit()),
+        ],
         child: const _InitPageListener(),
       ),
     );
